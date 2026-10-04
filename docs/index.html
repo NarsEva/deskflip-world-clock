@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DeskFlip">
+  <meta name="theme-color" content="#08090b">
+  <title>DeskFlip World Clock</title>
+  <style>
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;-webkit-text-size-adjust:100%;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;background:#08090b;color:#f4f4f2}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(0,0,0,0)}button,select{font:inherit}.app{position:relative;width:100%;height:100vh;min-height:100%;padding:22px;background:#08090b;color:#f4f4f2}.app.light{background:#eeeae2;color:#202124}
+    .brand{position:absolute;left:24px;top:20px;z-index:5;font-size:12px;font-weight:700;letter-spacing:2px;opacity:.55;text-transform:uppercase}.toolbar{position:absolute;top:14px;right:16px;z-index:20;display:-webkit-box;display:-webkit-flex;display:flex}.tool-btn+.tool-btn{margin-left:8px}
+    .tool-btn{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:inherit;border-radius:999px;min-width:52px;height:38px;padding:0 13px;font-size:11px;font-weight:700;letter-spacing:.7px;outline:none}.light .tool-btn{border-color:rgba(0,0,0,.12);background:rgba(255,255,255,.58)}
+    .clocks{width:100%;height:100%;padding-top:34px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-direction:row;flex-direction:row}.clock-card+.clock-card{margin-left:16px}
+    .clock-card{position:relative;-webkit-box-flex:1;-webkit-flex:1 1 0;flex:1 1 0;min-width:0;border-radius:24px;background:#111317;border:1px solid rgba(255,255,255,.06);box-shadow:0 18px 50px rgba(0,0,0,.24);display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;align-items:center;padding:28px 18px 24px;overflow:hidden}.light .clock-card{background:#faf8f4;border-color:rgba(0,0,0,.07);box-shadow:0 18px 45px rgba(72,61,45,.10)}
+    .location{margin-bottom:7px;font-size:19px;font-weight:700;text-align:center}.zone-line{min-height:18px;margin-bottom:22px;font-size:12px;font-weight:600;letter-spacing:1.1px;text-transform:uppercase;opacity:.48;text-align:center}.flip-row{width:100%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-perspective:900px;perspective:900px}
+    .flip-unit{position:relative;width:41%;max-width:210px;min-width:108px;padding:.22em 0 .25em;border-radius:14px;background:#1b1e23;color:#fff;font-size:7.4vw;line-height:1;font-weight:700;letter-spacing:-.06em;text-align:center;font-variant-numeric:tabular-nums;box-shadow:inset 0 1px rgba(255,255,255,.05),0 8px 22px rgba(0,0,0,.25);-webkit-transform-origin:center center;transform-origin:center center;-webkit-backface-visibility:hidden;backface-visibility:hidden;overflow:hidden}.flip-unit:after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.58);box-shadow:0 1px rgba(255,255,255,.035)}.light .flip-unit{background:#e7e3dc;color:#1d1e20;box-shadow:inset 0 1px rgba(255,255,255,.82),0 8px 22px rgba(66,56,43,.12)}.light .flip-unit:after{background:rgba(80,70,58,.25)}
+    .flip-unit.changed{-webkit-animation:flipPulse 330ms ease-out;animation:flipPulse 330ms ease-out}@-webkit-keyframes flipPulse{0%{-webkit-transform:rotateX(0deg)}46%{-webkit-transform:rotateX(-13deg)}100%{-webkit-transform:rotateX(0deg)}}@keyframes flipPulse{0%{transform:rotateX(0deg)}46%{transform:rotateX(-13deg)}100%{transform:rotateX(0deg)}}
+    .colon{margin:0 10px;width:22px;margin-top:-.08em;font-size:5.1vw;line-height:1;font-weight:500;opacity:.55;text-align:center}.time-meta{min-height:22px;margin-top:16px;font-size:13px;font-weight:600;letter-spacing:.8px;opacity:.54;font-variant-numeric:tabular-nums}.date-line{margin-top:10px;font-size:14px;font-weight:500;opacity:.52}
+    .settings-backdrop{position:absolute;z-index:90;left:0;right:0;top:0;bottom:0;display:none;background:rgba(0,0,0,.62);padding:22px;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;align-items:center}.settings-backdrop.open{display:-webkit-box;display:-webkit-flex;display:flex}.settings-panel{width:100%;max-width:520px;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#181a1f;color:#f5f5f3;border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,.4)}.light .settings-panel{background:#fbfaf7;color:#1f2022;border-color:rgba(0,0,0,.08)}
+    .settings-title{margin:0 0 20px;font-size:22px}.field{margin-bottom:17px}.field label{display:block;margin-bottom:7px;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.58}.field select{width:100%;height:44px;border-radius:10px;border:1px solid rgba(255,255,255,.11);background:#24272d;color:#fff;padding:0 11px;outline:none}.light .field select{border-color:rgba(0,0,0,.12);background:#f0ede7;color:#202124}
+    .toggle-row{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;align-items:center;min-height:46px;border-top:1px solid rgba(255,255,255,.07);font-size:14px}.light .toggle-row{border-top-color:rgba(0,0,0,.07)}.switch-btn{min-width:78px;height:34px;padding:0 12px;border:0;border-radius:999px;background:#2f333b;color:#fff;font-size:12px;font-weight:700}.light .switch-btn{background:#ded9d0;color:#202124}.done-btn{width:100%;height:44px;margin-top:18px;border:0;border-radius:11px;background:#f2f2ef;color:#121316;font-weight:700}.light .done-btn{background:#242529;color:#fff}.compat-note{margin-top:13px;font-size:11px;line-height:1.45;opacity:.43}
+    @media (orientation:portrait){.app{padding:20px}.clocks{padding-top:38px;-webkit-box-orient:vertical;-webkit-box-direction:normal;-webkit-flex-direction:column;flex-direction:column}.clock-card+.clock-card{margin-left:0;margin-top:14px}.clock-card{padding:24px 16px 18px;border-radius:22px}.location{font-size:18px;margin-bottom:5px}.zone-line{margin-bottom:14px}.flip-unit{font-size:12.8vw;max-width:250px;padding-top:.18em;padding-bottom:.22em}.colon{font-size:8vw}.time-meta{margin-top:12px}.date-line{margin-top:7px}}
+    @media (max-width:700px) and (orientation:landscape){.app{padding:14px}.brand{left:16px;top:14px}.toolbar{top:8px;right:10px}.clocks{padding-top:30px}.clock-card+.clock-card{margin-left:10px}.clock-card{border-radius:18px;padding:18px 10px 16px}.location{font-size:16px}.zone-line{margin-bottom:12px}}
+  </style>
+</head>
+<body>
+  <div id="app" class="app">
+    <div class="brand">DeskFlip</div>
+    <div class="toolbar"><button id="themeButton" class="tool-btn" type="button">DAY</button><button id="settingsButton" class="tool-btn" type="button">SET</button></div>
+    <main class="clocks" aria-label="Dual world clock">
+      <section class="clock-card"><div id="name1" class="location">Philippines</div><div id="zone1" class="zone-line">GMT+8 / Asia/Manila</div><div class="flip-row"><div id="hour1" class="flip-unit">--</div><div class="colon">:</div><div id="minute1" class="flip-unit">--</div></div><div id="meta1" class="time-meta">--</div><div id="date1" class="date-line">--</div></section>
+      <section class="clock-card"><div id="name2" class="location">United Kingdom</div><div id="zone2" class="zone-line">GMT / Europe/London</div><div class="flip-row"><div id="hour2" class="flip-unit">--</div><div class="colon">:</div><div id="minute2" class="flip-unit">--</div></div><div id="meta2" class="time-meta">--</div><div id="date2" class="date-line">--</div></section>
+    </main>
+    <div id="settingsBackdrop" class="settings-backdrop" role="dialog" aria-modal="true" aria-label="Clock settings">
+      <div class="settings-panel"><h2 class="settings-title">Clock settings</h2>
+        <div class="field"><label for="zoneSelect1">Left / first clock</label><select id="zoneSelect1"></select></div>
+        <div class="field"><label for="zoneSelect2">Right / second clock</label><select id="zoneSelect2"></select></div>
+        <div class="toggle-row"><span>Time format</span><button id="formatButton" class="switch-btn" type="button">24 HOUR</button></div>
+        <div class="toggle-row"><span>Show seconds</span><button id="secondsButton" class="switch-btn" type="button">ON</button></div>
+        <button id="doneButton" class="done-btn" type="button">Done</button>
+        <div class="compat-note">Choose either time zone independently. Your choices and theme are saved on this device when browser storage is available.</div>
+      </div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    "use strict";
+    var zones=[
+      {name:"Philippines",zone:"Asia/Manila"},{name:"United Kingdom",zone:"Europe/London"},{name:"UTC",zone:"UTC"},
+      {name:"Singapore",zone:"Asia/Singapore"},{name:"Tokyo",zone:"Asia/Tokyo"},{name:"Seoul",zone:"Asia/Seoul"},{name:"Hong Kong",zone:"Asia/Hong_Kong"},{name:"Bangkok",zone:"Asia/Bangkok"},{name:"Dubai",zone:"Asia/Dubai"},{name:"New Delhi",zone:"Asia/Kolkata"},
+      {name:"Sydney",zone:"Australia/Sydney"},{name:"Auckland",zone:"Pacific/Auckland"},{name:"Paris",zone:"Europe/Paris"},{name:"Berlin",zone:"Europe/Berlin"},{name:"Madrid",zone:"Europe/Madrid"},{name:"Rome",zone:"Europe/Rome"},
+      {name:"New York",zone:"America/New_York"},{name:"Toronto",zone:"America/Toronto"},{name:"Chicago",zone:"America/Chicago"},{name:"Denver",zone:"America/Denver"},{name:"Los Angeles",zone:"America/Los_Angeles"},{name:"Vancouver",zone:"America/Vancouver"},{name:"Honolulu",zone:"Pacific/Honolulu"}
+    ];
+    var state={theme:"dark",use12Hour:false,showSeconds:true,zone1:"Asia/Manila",zone2:"Europe/London"};
+    var previous={hour1:null,minute1:null,hour2:null,minute2:null};
+    var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    function byId(id){return document.getElementById(id)}
+    function pad2(v){v=String(v);return v.length<2?"0"+v:v}
+    function storageGet(k){try{return window.localStorage?window.localStorage.getItem(k):null}catch(e){return null}}
+    function storageSet(k,v){try{if(window.localStorage)window.localStorage.setItem(k,v)}catch(e){}}
+    function loadState(){var raw=storageGet("deskflip-settings-v2");if(!raw)return;try{var s=JSON.parse(raw);if(s.theme==="dark"||s.theme==="light")state.theme=s.theme;if(typeof s.use12Hour==="boolean")state.use12Hour=s.use12Hour;if(typeof s.showSeconds==="boolean")state.showSeconds=s.showSeconds;if(s.zone1)state.zone1=s.zone1;if(s.zone2)state.zone2=s.zone2}catch(e){}}
+    function saveState(){storageSet("deskflip-settings-v2",JSON.stringify(state))}
+    function findZone(id){var i;for(i=0;i<zones.length;i+=1)if(zones[i].zone===id)return zones[i];return{name:id,zone:id}}
+    function populateSelect(el,selected){var i,o;while(el.firstChild)el.removeChild(el.firstChild);for(i=0;i<zones.length;i+=1){o=document.createElement("option");o.value=zones[i].zone;o.text=zones[i].name+" - "+zones[i].zone;if(o.value===selected)o.selected=true;el.appendChild(o)}}
+    function lastSundayUtc(year,monthIndex){var d=new Date(Date.UTC(year,monthIndex+1,0,1,0,0));d.setUTCDate(d.getUTCDate()-d.getUTCDay());return d}
+    function isUkDst(date){var y=date.getUTCFullYear(),start=lastSundayUtc(y,2),end=lastSundayUtc(y,9);return date.getTime()>=start.getTime()&&date.getTime()<end.getTime()}
+    function fallbackOffset(zone,date){if(zone==="Asia/Manila"||zone==="Asia/Singapore"||zone==="Asia/Hong_Kong")return 480;if(zone==="Asia/Tokyo"||zone==="Asia/Seoul")return 540;if(zone==="Asia/Bangkok")return 420;if(zone==="Asia/Dubai")return 240;if(zone==="Asia/Kolkata")return 330;if(zone==="Europe/London")return isUkDst(date)?60:0;if(zone==="UTC")return 0;if(zone==="Pacific/Honolulu")return-600;return 0}
+    function fallbackParts(date,zone){var x=new Date(date.getTime()+fallbackOffset(zone,date)*60000);return{hour24:x.getUTCHours(),minute:x.getUTCMinutes(),second:x.getUTCSeconds(),weekday:days[x.getUTCDay()],month:months[x.getUTCMonth()],day:x.getUTCDate()}}
+    function formatTime(date,zone){var locale=state.use12Hour?"en-US":"en-GB",text,m,p,h24,h,period;try{text=new Intl.DateTimeFormat(locale,{timeZone:zone,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:state.use12Hour}).format(date);text=text.replace(/[\u200e\u200f]/g,"");m=text.match(/(\d{1,2}):(\d{2}):(\d{2})(?:\s*(AM|PM))?/i);if(m)return{hour:pad2(m[1]),minute:m[2],second:m[3],period:m[4]?m[4].toUpperCase():""}}catch(e){}p=fallbackParts(date,zone);h24=p.hour24;period="";h=h24;if(state.use12Hour){period=h24>=12?"PM":"AM";h=h24%12;if(h===0)h=12}return{hour:pad2(h),minute:pad2(p.minute),second:pad2(p.second),period:period}}
+    function formatDate(date,zone){try{return new Intl.DateTimeFormat("en-US",{timeZone:zone,weekday:"short",month:"short",day:"numeric"}).format(date)}catch(e){var p=fallbackParts(date,zone);return p.weekday+", "+p.month+" "+p.day}}
+    function zoneLabel(date,zone){var text,m;try{text=new Intl.DateTimeFormat("en-US",{timeZone:zone,timeZoneName:"short",hour:"numeric"}).format(date).replace(/[\u200e\u200f]/g,"");m=text.match(/(GMT(?:[+-]\d{1,2}(?::\d{2})?)?|UTC(?:[+-]\d{1,2}(?::\d{2})?)?|[A-Z]{2,5})\s*$/);if(m)return m[1].replace("UTC","GMT")}catch(e){}var min=fallbackOffset(zone,date);if(min===0)return"GMT";var sign=min>=0?"+":"-",a=Math.abs(min),hrs=Math.floor(a/60),mins=a%60;return"GMT"+sign+hrs+(mins?":"+pad2(mins):"")}
+    function animateValue(el,value,key){if(previous[key]!==value){el.textContent=value;el.className=el.className.replace(/\s*changed/g,"");void el.offsetWidth;el.className+=" changed";previous[key]=value}}
+    function updateClock(index,zone){var now=new Date(),z=findZone(zone),t=formatTime(now,zone),suffix=[];byId("name"+index).textContent=z.name;byId("zone"+index).textContent=zoneLabel(now,zone)+" / "+zone;animateValue(byId("hour"+index),t.hour,"hour"+index);animateValue(byId("minute"+index),t.minute,"minute"+index);if(state.showSeconds)suffix.push(t.second+" sec");if(t.period)suffix.push(t.period);byId("meta"+index).textContent=suffix.length?suffix.join(" / "):" ";byId("date"+index).textContent=formatDate(now,zone)}
+    function updateAll(){updateClock(1,state.zone1);updateClock(2,state.zone2)}
+    function applyTheme(){var app=byId("app");if(state.theme==="light"){app.className="app light";byId("themeButton").textContent="NIGHT"}else{app.className="app";byId("themeButton").textContent="DAY"}}
+    function syncButtons(){byId("formatButton").textContent=state.use12Hour?"12 HOUR":"24 HOUR";byId("secondsButton").textContent=state.showSeconds?"ON":"OFF"}
+    function openSettings(){populateSelect(byId("zoneSelect1"),state.zone1);populateSelect(byId("zoneSelect2"),state.zone2);syncButtons();byId("settingsBackdrop").className="settings-backdrop open"}
+    function closeSettings(){state.zone1=byId("zoneSelect1").value;state.zone2=byId("zoneSelect2").value;saveState();byId("settingsBackdrop").className="settings-backdrop";previous.hour1=previous.minute1=previous.hour2=previous.minute2=null;updateAll()}
+    function bind(){byId("themeButton").onclick=function(){state.theme=state.theme==="dark"?"light":"dark";applyTheme();saveState()};byId("settingsButton").onclick=openSettings;byId("doneButton").onclick=closeSettings;byId("formatButton").onclick=function(){state.use12Hour=!state.use12Hour;syncButtons();saveState();updateAll()};byId("secondsButton").onclick=function(){state.showSeconds=!state.showSeconds;syncButtons();saveState();updateAll()};byId("settingsBackdrop").onclick=function(e){if(e.target===byId("settingsBackdrop"))closeSettings()};window.addEventListener("orientationchange",function(){window.setTimeout(updateAll,250)})}
+    function init(){loadState();applyTheme();populateSelect(byId("zoneSelect1"),state.zone1);populateSelect(byId("zoneSelect2"),state.zone2);syncButtons();bind();updateAll();window.setInterval(updateAll,500)}
+    if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+  }());
+  </script>
+</body>
+</html>
