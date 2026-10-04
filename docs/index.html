@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" manifest="deskflip.appcache">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -41,7 +41,7 @@
         <div class="toggle-row"><span>Time format</span><button id="formatButton" class="switch-btn" type="button">24 HOUR</button></div>
         <div class="toggle-row"><span>Show seconds</span><button id="secondsButton" class="switch-btn" type="button">ON</button></div>
         <button id="doneButton" class="done-btn" type="button">Done</button>
-        <div class="compat-note">Choose either time zone independently. Your choices and theme are saved on this device when browser storage is available.</div>
+        <div class="compat-note">Choose either time zone independently. Your choices and theme are saved on this device when browser storage is available.</div><div id="offlineStatus" class="compat-note">Offline cache: checking...</div>
       </div>
     </div>
   </div>
@@ -80,7 +80,7 @@
     function openSettings(){populateSelect(byId("zoneSelect1"),state.zone1);populateSelect(byId("zoneSelect2"),state.zone2);syncButtons();byId("settingsBackdrop").className="settings-backdrop open"}
     function closeSettings(){state.zone1=byId("zoneSelect1").value;state.zone2=byId("zoneSelect2").value;saveState();byId("settingsBackdrop").className="settings-backdrop";previous.hour1=previous.minute1=previous.hour2=previous.minute2=null;updateAll()}
     function bind(){byId("themeButton").onclick=function(){state.theme=state.theme==="dark"?"light":"dark";applyTheme();saveState()};byId("settingsButton").onclick=openSettings;byId("doneButton").onclick=closeSettings;byId("formatButton").onclick=function(){state.use12Hour=!state.use12Hour;syncButtons();saveState();updateAll()};byId("secondsButton").onclick=function(){state.showSeconds=!state.showSeconds;syncButtons();saveState();updateAll()};byId("settingsBackdrop").onclick=function(e){if(e.target===byId("settingsBackdrop"))closeSettings()};window.addEventListener("orientationchange",function(){window.setTimeout(updateAll,250)})}
-    function init(){loadState();applyTheme();populateSelect(byId("zoneSelect1"),state.zone1);populateSelect(byId("zoneSelect2"),state.zone2);syncButtons();bind();updateAll();window.setInterval(updateAll,500)}
+    function setupOfflineCache(){var el=byId("offlineStatus"),ac=window.applicationCache;if(!el)return;if(!ac){el.textContent="Offline cache: not required / unsupported in this browser";return}function setStatus(t){el.textContent="Offline cache: "+t}try{if(ac.status===ac.CACHED||ac.status===ac.IDLE)setStatus("READY");else setStatus("INSTALLING");ac.addEventListener("cached",function(){setStatus("READY")},false);ac.addEventListener("noupdate",function(){setStatus("READY")},false);ac.addEventListener("downloading",function(){setStatus("INSTALLING")},false);ac.addEventListener("updateready",function(){setStatus("UPDATE READY");try{ac.swapCache();window.setTimeout(function(){window.location.reload()},250)}catch(e){}},false);ac.addEventListener("error",function(){setStatus("ERROR - reconnect to Wi-Fi and reload once")},false)}catch(e){setStatus("UNKNOWN")}}function init(){loadState();applyTheme();populateSelect(byId("zoneSelect1"),state.zone1);populateSelect(byId("zoneSelect2"),state.zone2);syncButtons();bind();setupOfflineCache();updateAll();window.setInterval(updateAll,500)}
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
   }());
   </script>
